@@ -10,6 +10,18 @@ const routes: Routes = [
   {
     path: 'folder/:id',
     loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule)
+  },
+  {
+    path: 'estoque',
+    loadChildren: () => import('./estoque/estoque.module').then( m => m.EstoquePageModule)
+  },
+  {
+    path: 'categoria',
+    loadChildren: () => import('./categoria/categoria.module').then( m => m.CategoriaPageModule)
+  },
+  {
+    path: 'produto',
+    loadChildren: () => import('./produto/produto.module').then( m => m.ProdutoPageModule)
   }
 ];
 
