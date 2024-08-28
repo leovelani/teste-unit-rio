@@ -19,3 +19,6 @@ Para instalar e executar o projeto localmente, siga os passos abaixo:
 Execute o comando: ```npm install ```
 
 Execute o servidor de desenvolvimento: ```ionic serve ```
+
+## Branch
+
