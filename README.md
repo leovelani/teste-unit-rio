@@ -22,10 +22,15 @@ Execute o servidor de desenvolvimento: ```ionic serve ```
 
 ## Branch
 ```git clone https://github.com/LucasGoshi/controle_estoque.git```
+
 ```cd controle_estoque``` 
+
 ```git checkout lucas``` 
+
 ```git add .``` 
+
 ```git commit -m "Adicionei a funcionalidade X e corrigi o bug Y"``` 
+
 ```git push origin lucas``` 
 
 
