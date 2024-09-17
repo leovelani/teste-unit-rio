@@ -16,7 +16,7 @@ Este projeto tem como funcionalidade, um cadastro de estoque de insumos mobile u
 
 Para instalar e executar o projeto localmente, siga os passos abaixo:
 
-Execute o comando: ```npm install ```
+Execute o comando: ```npm install -g @ionic/cli ```
 
 Execute o servidor de desenvolvimento: ```ionic serve ```
 
