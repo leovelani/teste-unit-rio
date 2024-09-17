@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Detalhes do Cliente</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ cliente.nome }}</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p><strong>Email:</strong> {{ cliente.email }}</p>
+      <p><strong>Telefone:</strong> {{ cliente.telefone }}</p>
+      <p><strong>Endereço:</strong> {{ cliente.endereco }}</p>
+      <p><strong>Data de Nascimento:</strong> {{ cliente.nascimento }}</p>
+      <p><strong>Status:</strong> {{ cliente.status }}</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
