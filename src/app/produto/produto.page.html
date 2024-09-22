@@ -1,13 +1,43 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>produto</ion-title>
+    <ion-title>Cadastrar Produto</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">produto</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <form (ngSubmit)="onSubmit()" #produtoForm="ngForm">
+    <ion-item>
+      <ion-label position="floating">Nome do Produto</ion-label>
+      <ion-input type="text" required [(ngModel)]="produto.nome_produto" name="nome_produto"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Código de Barras</ion-label>
+      <ion-input type="text" required [(ngModel)]="produto.codigo_barras" name="codigo_barras"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Quantidade</ion-label>
+      <ion-input type="number" required [(ngModel)]="produto.quantidade" name="quantidade"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Data de Validade</ion-label>
+      <ion-input type="date" required [(ngModel)]="produto.data_validade" name="data_validade"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Categoria</ion-label>
+      <ion-select [(ngModel)]="produto.id_categoria" name="id_categoria">
+        <ion-select-option *ngFor="let categoria of categorias" [value]="categoria.id_categoria">{{ categoria.nome_categoria }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Preço Pago</ion-label>
+      <ion-input type="number" required [(ngModel)]="produto.valor_pago" name="valor_pago"></ion-input>
+    </ion-item>
+
+    <ion-button expand="full" type="submit" [disabled]="!produtoForm.form.valid">Cadastrar Produto</ion-button>
+  </form>
 </ion-content>
