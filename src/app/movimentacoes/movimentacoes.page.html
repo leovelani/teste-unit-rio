@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Cadastrar Movimentação</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="onSubmit()" #movimentacaoForm="ngForm">
+    <ion-item>
+      <ion-label position="floating">Produto</ion-label>
+      <ion-select [(ngModel)]="movimentacao.id_produto" name="id_produto">
+        <ion-select-option *ngFor="let produto of produtos" [value]="produto.id_produto">{{ produto.nome_produto }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Tipo de Movimentação</ion-label>
+      <ion-select [(ngModel)]="movimentacao.tipo_movimentacao" name="tipo_movimentacao">
+        <ion-select-option value="entrada">Entrada</ion-select-option>
+        <ion-select-option value="saida">Saída</ion-select-option>
+        <ion-select-option value="exclusao">Exclusão</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Quantidade Movimentada</ion-label>
+      <ion-input type="number" required [(ngModel)]="movimentacao.quantidade_movimentada" name="quantidade_movimentada"></ion-input>
+    </ion-item>
+
+    <ion-button expand="full" type="submit" [disabled]="!movimentacaoForm.form.valid">Cadastrar Movimentação</ion-button>
+  </form>
+</ion-content>
