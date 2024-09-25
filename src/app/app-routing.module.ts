@@ -33,6 +33,10 @@ const routes: Routes = [
   },  {
     path: 'movimentacoes',
     loadChildren: () => import('./movimentacoes/movimentacoes.module').then( m => m.MovimentacoesPageModule)
+  },
+  {
+    path: 'historico',
+    loadChildren: () => import('./historico/historico.module').then( m => m.HistoricoPageModule)
   }
 
 ];
