@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-produto',
@@ -10,7 +11,11 @@ export class ProdutoPage implements OnInit {
   produto: any = {};  // Propriedade para armazenar os dados do produto
   categorias: any[] = [];  // Simulação de categorias disponíveis
 
-  constructor() { }
+  constructor(private modalCtrl: ModalController) {}
+
+  close() {
+    this.modalCtrl.dismiss();
+  }
 
   ngOnInit() {
     // Simulação de categorias para o select

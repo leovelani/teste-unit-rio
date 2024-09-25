@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-categoria',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CategoriaPage implements OnInit {
 
-  categoria: any = {};  // Propriedade para armazenar os dados da categoria
+  categoria: any = {};  
 
-  constructor() { }
+  constructor(private modalCtrl: ModalController) {}
+
+  close() {
+    this.modalCtrl.dismiss();
+  }
 
   ngOnInit() {
   }

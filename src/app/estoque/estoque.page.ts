@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-estoque',
@@ -9,7 +10,11 @@ export class EstoquePage implements OnInit {
 
   estoque: any = {};  // Propriedade para armazenar os dados do estoque
 
-  constructor() { }
+  constructor(private modalCtrl: ModalController) {}
+
+  close() {
+    this.modalCtrl.dismiss();
+  }
 
   ngOnInit() {
   }
