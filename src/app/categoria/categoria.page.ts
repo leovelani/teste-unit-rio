@@ -15,6 +15,9 @@ export class CategoriaPage implements OnInit {
   close() {
     this.modalCtrl.dismiss();
   }
+  categoria: any = {};  // Propriedade para armazenar os dados da categoria
+
+  constructor() { }
 
   ngOnInit() {
   }

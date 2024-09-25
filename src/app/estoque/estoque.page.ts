@@ -15,6 +15,7 @@ export class EstoquePage implements OnInit {
   close() {
     this.modalCtrl.dismiss();
   }
+  constructor() { }
 
   ngOnInit() {
   }

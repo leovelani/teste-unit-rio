@@ -30,7 +30,8 @@ const routes: Routes = [
   {
     path: 'cliente-detalhes',
     loadChildren: () => import('./pages/cliente-detalhes/cliente-detalhes.module').then( m => m.ClienteDetalhesPageModule)
-  },  {
+  },
+  {
     path: 'movimentacoes',
     loadChildren: () => import('./movimentacoes/movimentacoes.module').then( m => m.MovimentacoesPageModule)
   },
