@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { MovimentacoesPage } from './movimentacoes.page';
 
+
 const routes: Routes = [
   {
     path: '',

@@ -7,7 +7,7 @@
       </ion-select>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button>
+      <ion-button (click)="validateAndNavigate()">
         <ion-icon slot="icon-only" name="cart-outline"></ion-icon>
       </ion-button>
       <ion-button>
@@ -46,18 +46,6 @@
       <ion-fab-button (click)="openProdutoModal()">
         <ion-icon name="basket-outline"></ion-icon>
         <ion-label>Adicionar produto</ion-label>
-      </ion-fab-button>
-      <ion-fab-button>
-        <ion-icon name="archive-outline"></ion-icon>
-        <ion-label>Adicionar categoria</ion-label>
-      </ion-fab-button>
-      <ion-fab-button>
-        <ion-icon name="basket-outline"></ion-icon>
-        <ion-label>Adicionar produto</ion-label>
-      </ion-fab-button>
-      <ion-fab-button>
-        <ion-icon name="add-circle-outline"></ion-icon>
-        <ion-label>Adicionar estoque</ion-label>
       </ion-fab-button>
     </ion-fab-list>
   </ion-fab>  

@@ -47,4 +47,12 @@
       --ion-text-color: #000000;
     }
   }
+
+  ion-title, ion-label, ion-searchbar, p, ion-input, ion-button, ion-select, ion-select-option {
+    font-family: 'Lexend Deca', sans-serif !important;
+  }
+
+  ion-button{
+    --background: rgba(239, 253, 249, 0.78); 
+  }
   

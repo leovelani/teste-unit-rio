@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-movimentacoes',
@@ -10,7 +11,11 @@ export class MovimentacoesPage implements OnInit {
   movimentacao: any = {};  // Propriedade para armazenar os dados da movimentação
   produtos: any[] = [];  // Propriedade para armazenar os produtos disponíveis
 
-  constructor() { }
+  constructor(private navCtrl: NavController) { }
+
+  goBack() {
+    this.navCtrl.navigateBack('folder/Inbox');
+  }
 
   ngOnInit() {
     // Simulação de produtos para o select

@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController } from '@ionic/angular';
+import { Router } from '@angular/router';
 import { EstoquePage } from '../estoque/estoque.page';
 import { CategoriaPage } from '../categoria/categoria.page';
 import { ProdutoPage } from '../produto/produto.page';
@@ -10,10 +11,11 @@ import { ProdutoPage } from '../produto/produto.page';
   templateUrl: './folder.page.html',
   styleUrls: ['./folder.page.scss'],
 })
+
 export class FolderPage implements OnInit {
   public folder!: string;
   private activatedRoute = inject(ActivatedRoute);
-  constructor(private modalCtrl: ModalController) {}
+  constructor(private modalCtrl: ModalController, private router: Router) {}
 
   async openEstoqueModal() {
     const modal = await this.modalCtrl.create({
@@ -38,5 +40,13 @@ export class FolderPage implements OnInit {
 
   ngOnInit() {
     this.folder = this.activatedRoute.snapshot.paramMap.get('id') as string;
+  }
+
+  validateAndNavigate() {
+    const currentUrl = this.router.url;
+
+    if (currentUrl !== '/movimentacoes') {
+      this.router.navigate(['/movimentacoes']);
+    }
   }
 }

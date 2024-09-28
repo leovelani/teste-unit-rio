@@ -16,7 +16,6 @@ export class ProdutoPage implements OnInit {
   close() {
     this.modalCtrl.dismiss();
   }
-  constructor() { }
 
   ngOnInit() {
     // Simulação de categorias para o select

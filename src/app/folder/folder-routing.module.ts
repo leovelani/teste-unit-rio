@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: FolderPage
+  },
+  {
+    path: 'movimentacoes',
+    loadChildren: () => import('../movimentacoes/movimentacoes.module').then(m => m.MovimentacoesPageModule)
   }
 ];
 
