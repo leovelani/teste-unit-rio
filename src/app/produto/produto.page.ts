@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { IndexedDBService } from '../services/indexeddb.service';  // Importe o serviço
 import { ModalController } from '@ionic/angular';
 
 @Component({
@@ -9,33 +10,62 @@ import { ModalController } from '@ionic/angular';
 export class ProdutoPage implements OnInit {
 
   produto: any = {};  // Propriedade para armazenar os dados do produto
+  produtos: any[] = [];  // Lista para armazenar todos os produtos
   categorias: any[] = [];  // Simulação de categorias disponíveis
 
-  constructor(private modalCtrl: ModalController) {}
+  constructor(private indexedDBService: IndexedDBService, private modalCtrl: ModalController) {}  // Injete o serviço no construtor
 
   close() {
     this.modalCtrl.dismiss();
   }
 
   ngOnInit() {
-    // Simulação de categorias para o select
-    this.categorias = [
-      { id_categoria: 1, nome_categoria: 'Eletrônicos' },
-      { id_categoria: 2, nome_categoria: 'Roupas' },
-      { id_categoria: 3, nome_categoria: 'Alimentos' }
-    ];
+    // Carregar categorias do IndexedDB
+    this.loadCategorias();
+
+    // Carregar todos os produtos do IndexedDB
+    this.loadProdutos();
+  }
+
+  // Método para carregar as categorias do IndexedDB
+  loadCategorias() {
+    this.indexedDBService.getCategorias().then((data) => {
+      this.categorias = data;
+    });
+  }
+
+  // Método para carregar os produtos do IndexedDB
+  loadProdutos() {
+    this.indexedDBService.getProdutos().then((data) => {
+      this.produtos = data;
+    });
   }
 
   // Método que será chamado ao submeter o formulário
   onSubmit() {
     console.log('Produto cadastrado:', this.produto);
 
-    // Simulação de salvamento dos dados do produto no localStorage
-    let produtos = JSON.parse(localStorage.getItem('produtos') || '[]');
-    produtos.push(this.produto);
-    localStorage.setItem('produtos', JSON.stringify(produtos));
+    // Salvar o produto no IndexedDB
+    this.indexedDBService.addProduto(this.produto).then(() => {
+      // Após salvar o produto, recarregar a lista de produtos
+      this.loadProdutos();
+    });
 
     // Limpar o formulário após o salvamento
     this.produto = {};
+  }
+
+  // Método para excluir um produto
+  excluirProduto(id_produto: number) {
+    this.indexedDBService.deleteProduto(id_produto).then(() => {
+      // Após a exclusão, recarregar a lista de produtos
+      this.loadProdutos();
+    });
+  }
+
+  // Método para retornar o nome da categoria pelo ID
+  getCategoriaNome(id_categoria: number): string {
+    const categoria = this.categorias.find(cat => cat.id_categoria === id_categoria);
+    return categoria ? categoria.nome_categoria : 'Categoria não encontrada';
   }
 }

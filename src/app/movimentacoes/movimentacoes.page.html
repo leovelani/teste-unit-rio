@@ -3,24 +3,25 @@
     <ion-title>Cadastrar Movimentação</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="goBack()">
-        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+        <ion-icon class="close-icon" slot="icon-only" name="close-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <!-- Formulário para cadastrar movimentação -->
   <form (ngSubmit)="onSubmit()" #movimentacaoForm="ngForm">
     <ion-item>
       <ion-label position="floating">Produto</ion-label>
-      <ion-select [(ngModel)]="movimentacao.id_produto" name="id_produto">
+      <ion-select [(ngModel)]="movimentacao.id_produto" name="id_produto" required>
         <ion-select-option *ngFor="let produto of produtos" [value]="produto.id_produto">{{ produto.nome_produto }}</ion-select-option>
       </ion-select>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Tipo de Movimentação</ion-label>
-      <ion-select [(ngModel)]="movimentacao.tipo_movimentacao" name="tipo_movimentacao">
+      <ion-select [(ngModel)]="movimentacao.tipo_movimentacao" name="tipo_movimentacao" required>
         <ion-select-option value="entrada">Entrada</ion-select-option>
         <ion-select-option value="saida">Saída</ion-select-option>
         <ion-select-option value="exclusao">Exclusão</ion-select-option>
@@ -34,4 +35,17 @@
 
     <ion-button expand="full" type="submit" [disabled]="!movimentacaoForm.form.valid">Cadastrar Movimentação</ion-button>
   </form>
+
+  <!-- Listagem de movimentações cadastradas -->
+  <ion-list>
+    <ion-item *ngFor="let mov of movimentacoes">
+      <ion-label>
+        <h2>Produto ID: {{ mov.id_produto }}</h2>
+        <p>Tipo de Movimentação: {{ mov.tipo_movimentacao }}</p>
+        <p>Quantidade Movimentada: {{ mov.quantidade_movimentada }}</p>
+        <p>Data: {{ mov.data_movimentacao | date:'short' }}</p>
+      </ion-label>
+      <ion-button color="danger" (click)="deleteMovimentacao(mov.id_movimentacao)">Excluir</ion-button>
+    </ion-item>
+  </ion-list>
 </ion-content>

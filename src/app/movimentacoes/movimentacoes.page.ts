@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { IndexedDBService } from 'src/app/services/indexeddb.service';  // Certifique-se de que o caminho está correto
 import { NavController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-movimentacoes',
@@ -10,32 +12,54 @@ export class MovimentacoesPage implements OnInit {
 
   movimentacao: any = {};  // Propriedade para armazenar os dados da movimentação
   produtos: any[] = [];  // Propriedade para armazenar os produtos disponíveis
+  movimentacoes: any[] = [];  // Lista de movimentações
 
-  constructor(private navCtrl: NavController) { }
+  constructor(private indexedDBService: IndexedDBService, private navCtrl: NavController) {}
 
   goBack() {
     this.navCtrl.navigateBack('folder/Inbox');
   }
 
+
   ngOnInit() {
-    // Simulação de produtos para o select
-    this.produtos = [
-      { id_produto: 1, nome_produto: 'Produto A' },
-      { id_produto: 2, nome_produto: 'Produto B' },
-      { id_produto: 3, nome_produto: 'Produto C' }
-    ];
+    // Carregar os produtos do IndexedDB ao iniciar
+    this.indexedDBService.getProdutos().then(produtos => {
+      this.produtos = produtos;
+    });
+
+    // Carregar as movimentações já cadastradas
+    this.loadMovimentacoes();
+  }
+
+  // Método para carregar todas as movimentações do IndexedDB
+  loadMovimentacoes() {
+    this.indexedDBService.getMovimentacoes().then(movs => {
+      this.movimentacoes = movs;
+    });
   }
 
   // Método que será chamado ao submeter o formulário
   onSubmit() {
     console.log('Movimentação cadastrada:', this.movimentacao);
 
-    // Simulação de salvamento dos dados da movimentação no localStorage
-    let movimentacoes = JSON.parse(localStorage.getItem('movimentacoes') || '[]');
-    movimentacoes.push(this.movimentacao);
-    localStorage.setItem('movimentacoes', JSON.stringify(movimentacoes));
+    // Adicionar movimentação ao IndexedDB
+    this.indexedDBService.addMovimentacao(this.movimentacao).then(() => {
+      // Atualizar a lista de movimentações
+      this.loadMovimentacoes();
+      // Limpar o formulário após o salvamento
+      this.movimentacao = {};
+    }).catch((error) => {
+      console.error('Erro ao adicionar movimentação:', error);
+    });
+  }
 
-    // Limpar o formulário após o salvamento
-    this.movimentacao = {};
+  // Método para excluir uma movimentação
+  deleteMovimentacao(id_movimentacao: number) {
+    this.indexedDBService.deleteMovimentacao(id_movimentacao).then(() => {
+      // Atualizar a lista de movimentações após a exclusão
+      this.loadMovimentacoes();
+    }).catch((error) => {
+      console.error('Erro ao excluir movimentação:', error);
+    });
   }
 }

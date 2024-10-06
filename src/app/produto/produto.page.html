@@ -3,13 +3,14 @@
     <ion-title>Cadastrar Produto</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="close()">
-        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+        <ion-icon class="close-icon" slot="icon-only" name="close-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <!-- Formulário para cadastro de produto -->
   <form (ngSubmit)="onSubmit()" #produtoForm="ngForm">
     <ion-item>
       <ion-label position="floating">Nome do Produto</ion-label>
@@ -27,9 +28,8 @@
     </ion-item>
 
     <ion-item>
-      <ion-label position="floating">Data de Validade</ion-label>
+      <ion-label position="floating">Data de Validade</ion-label><br>
       <ion-datetime presentation="date" required [preferWheel]="true" displayFormat="DD/MM/YYYY" [(ngModel)]="produto.data_validade" name="data_validade"></ion-datetime>
-      <ion-input type="date" required [(ngModel)]="produto.data_validade" name="data_validade"></ion-input>
     </ion-item>
 
     <ion-item>
@@ -46,4 +46,18 @@
 
     <ion-button expand="full" type="submit" [disabled]="!produtoForm.form.valid">Cadastrar Produto</ion-button>
   </form>
+
+  <!-- Listagem de produtos cadastrados -->
+  <ion-list>
+    <ion-item *ngFor="let produto of produtos">
+      <ion-label>
+        <h2>{{ produto.nome_produto }} ({{ produto.codigo_barras }})</h2>
+        <p>Quantidade: {{ produto.quantidade }}</p>
+        <p>Data de Validade: {{ produto.data_validade }}</p>
+        <p>Categoria: {{ getCategoriaNome(produto.id_categoria) }}</p>
+        <p>Preço Pago: {{ produto.valor_pago }}</p>
+      </ion-label>
+      <ion-button color="danger" (click)="excluirProduto(produto.id_produto)">Excluir</ion-button>
+    </ion-item>
+  </ion-list>
 </ion-content>
