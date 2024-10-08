@@ -1,0 +1,17 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-title>Listagem dos produtos</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list>
+        <ion-item-sliding *ngFor="let Lista of listagem; let i = index">
+            <ion-item-options side="end">
+                <ion-item-options color="danger" (click)="excluirLista(i)">
+                    <ion-icon slot="icon-only" name="trash"></ion-icon> EXCLUIR
+                </ion-item-options>
+            </ion-item-options>
+        </ion-item-sliding>
+    </ion-list>
+  </ion-content>
