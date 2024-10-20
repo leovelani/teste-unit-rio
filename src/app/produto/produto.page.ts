@@ -43,18 +43,32 @@ export class ProdutoPage implements OnInit {
 
   // Método que será chamado ao submeter o formulário
   onSubmit() {
-    console.log('Produto cadastrado:', this.produto);
-
-    // Salvar o produto no IndexedDB
-    this.indexedDBService.addProduto(this.produto).then(() => {
-      // Após salvar o produto, recarregar a lista de produtos
-      this.loadProdutos();
-    });
-
-    // Limpar o formulário após o salvamento
-    this.produto = {};
+    // Verificar se estamos editando ou adicionando
+    if (this.produto.id_produto) {
+      // Atualizar produto existente
+      this.indexedDBService.updateProduto(this.produto).then(() => {
+        this.loadProdutos();
+        this.produto = {}; // Limpar o formulário após atualização
+      }).catch((error) => {
+        console.error('Erro ao atualizar produto:', error);
+      });
+    } else {
+      // Adicionar novo produto
+      this.indexedDBService.addProduto(this.produto).then(() => {
+        // Após salvar o produto, recarregar a lista de produtos
+        this.loadProdutos();
+        this.produto = {}; // Limpar o formulário após o salvamento
+      }).catch((error) => {
+        console.error('Erro ao adicionar produto:', error);
+      });
+    }
   }
 
+  // Método para editar um produto
+  editProduto(produto: any) {
+    this.produto = { ...produto }; // Carregar dados do produto para edição
+  }
+  
   // Método para excluir um produto
   excluirProduto(id_produto: number) {
     this.indexedDBService.deleteProduto(id_produto).then(() => {

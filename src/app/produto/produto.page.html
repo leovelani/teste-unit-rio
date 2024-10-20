@@ -1,16 +1,11 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Cadastrar Produto</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="close()">
-        <ion-icon class="close-icon" slot="icon-only" name="close-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <!-- Formulário para cadastro de produto -->
+  <!-- Formulário para cadastro/edição de produto -->
   <form (ngSubmit)="onSubmit()" #produtoForm="ngForm">
     <ion-item>
       <ion-label position="floating">Nome do Produto</ion-label>
@@ -28,14 +23,16 @@
     </ion-item>
 
     <ion-item>
-      <ion-label position="floating">Data de Validade</ion-label><br>
-      <ion-datetime presentation="date" required [preferWheel]="true" displayFormat="DD/MM/YYYY" [(ngModel)]="produto.data_validade" name="data_validade"></ion-datetime>
+      <ion-label position="floating">Data de Validade</ion-label>
+      <ion-input type="date" required [(ngModel)]="produto.data_validade" name="data_validade"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Categoria</ion-label>
       <ion-select [(ngModel)]="produto.id_categoria" name="id_categoria">
-        <ion-select-option *ngFor="let categoria of categorias" [value]="categoria.id_categoria">{{ categoria.nome_categoria }}</ion-select-option>
+        <ion-select-option *ngFor="let categoria of categorias" [value]="categoria.id_categoria">
+          {{ categoria.nome_categoria }}
+        </ion-select-option>
       </ion-select>
     </ion-item>
 
@@ -44,7 +41,9 @@
       <ion-input type="number" required [(ngModel)]="produto.valor_pago" name="valor_pago"></ion-input>
     </ion-item>
 
-    <ion-button expand="full" type="submit" [disabled]="!produtoForm.form.valid">Cadastrar Produto</ion-button>
+    <ion-button expand="full" type="submit" [disabled]="!produtoForm.form.valid">
+      {{ produto.id_produto ? 'Atualizar Produto' : 'Cadastrar Produto' }}
+    </ion-button>
   </form>
 
   <!-- Listagem de produtos cadastrados -->
@@ -57,6 +56,8 @@
         <p>Categoria: {{ getCategoriaNome(produto.id_categoria) }}</p>
         <p>Preço Pago: {{ produto.valor_pago }}</p>
       </ion-label>
+      <!-- Botões de Ação -->
+      <ion-button color="primary" (click)="editProduto(produto)">Editar</ion-button>
       <ion-button color="danger" (click)="excluirProduto(produto.id_produto)">Excluir</ion-button>
     </ion-item>
   </ion-list>

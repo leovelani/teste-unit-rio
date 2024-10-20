@@ -33,16 +33,24 @@ export class CategoriaPage implements OnInit {
 
   // Método que será chamado quando o formulário for submetido
   onSubmit() {
-    console.log('Categoria cadastrada:', this.categoria);
-
-    // Adicionar a nova categoria ao IndexedDB usando o serviço
-    this.indexedDBService.addCategoria(this.categoria).then(() => {
-      console.log('Categoria salva com sucesso.');
-      this.categoria = {}; // Limpar o formulário após o salvamento
-      this.loadCategorias(); // Recarregar as categorias após adicionar
-    }).catch((error) => {
-      console.error('Erro ao salvar categoria:', error);
-    });
+    // Verificar se estamos editando ou adicionando
+    if (this.categoria.id_categoria) {
+      // Atualizar a categoria existente
+      this.indexedDBService.updateCategoria(this.categoria).then(() => {
+        this.loadCategorias();
+        this.categoria = {}; // Limpar o formulário após a atualização
+      }).catch((error) => {
+        console.error('Erro ao atualizar a categoria:', error);
+      });
+    } else {
+      // Adicionar nova categoria
+      this.indexedDBService.addCategoria(this.categoria).then(() => {
+        this.categoria = {}; // Limpar o formulário após o salvamento
+        this.loadCategorias(); // Recarregar as categorias após adicionar
+      }).catch((error) => {
+        console.error('Erro ao salvar categoria:', error);
+      });
+    }
   }
 
   // Carregar categorias do IndexedDB
@@ -52,6 +60,11 @@ export class CategoriaPage implements OnInit {
     }).catch((error) => {
       console.error('Erro ao carregar categorias:', error);
     });
+  }
+  
+  // Método para editar uma categoria
+  editCategoria(categoria: any) {
+    this.categoria = { ...categoria }; // Carregar dados da categoria no formulário para edição
   }
 
   // Método para excluir uma categoria

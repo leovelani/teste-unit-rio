@@ -10,13 +10,17 @@
 </ion-header>
 
 <ion-content>
+  <!-- Formulário para cadastrar novo estoque -->
   <form (ngSubmit)="onSubmit()" #estoqueForm="ngForm">
     <ion-item>
       <ion-label position="floating">Nome do Estoque</ion-label>
       <ion-input type="text" required [(ngModel)]="estoque.nome_estoque" name="nome_estoque"></ion-input>
     </ion-item>
 
-    <ion-button expand="full" type="submit" [disabled]="!estoqueForm.form.valid">Cadastrar Estoque</ion-button>
+    <!-- Mudar o texto do botão dependendo se estamos editando ou criando -->
+    <ion-button expand="full" type="submit" [disabled]="!estoqueForm.form.valid">
+      {{ estoque.id_estoque ? 'Atualizar Estoque' : 'Cadastrar Estoque' }}
+    </ion-button>
   </form>
 
   <ion-list>
@@ -29,6 +33,12 @@
         <ion-label>{{ estoque.nome_estoque }}</ion-label>
       </ion-item>
       <ion-item-options side="end">
+        <!-- Botão de Editar -->
+        <ion-item-option color="primary" (click)="editEstoque(estoque)">
+          <ion-icon slot="icon-only" name="create"></ion-icon>
+          Editar
+        </ion-item-option>
+        <!-- Botão de Excluir -->
         <ion-item-option color="danger" (click)="deleteEstoque(estoque.id_estoque)">
           <ion-icon slot="icon-only" name="trash"></ion-icon>
           Excluir

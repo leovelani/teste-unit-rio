@@ -121,6 +121,29 @@ export class IndexedDBService {
       };
     });
   }
+// Atualizar produto
+updateProduto(produto: any): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(this.dbName, this.dbVersion);
+
+    request.onsuccess = (event: any) => {
+      const db = event.target.result;
+      const transaction = db.transaction('produtos', 'readwrite');
+      const store = transaction.objectStore('produtos');
+
+      // Usar `put` para atualizar o produto existente
+      const updateRequest = store.put(produto);
+      updateRequest.onsuccess = () => {
+        resolve();
+      };
+      updateRequest.onerror = (error: Event) => {
+        reject(error);
+      };
+    };
+  });
+}
+
+
 
   // Movimentações CRUD
 
@@ -194,6 +217,29 @@ export class IndexedDBService {
     });
   }
 
+  // Atualizar movimentação
+updateMovimentacao(movimentacao: any): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(this.dbName, this.dbVersion);
+
+    request.onsuccess = (event: any) => {
+      const db = event.target.result;
+      const transaction = db.transaction('movimentacoes', 'readwrite');
+      const store = transaction.objectStore('movimentacoes');
+
+      // Usar `put` para atualizar a movimentação existente
+      const updateRequest = store.put(movimentacao);
+      updateRequest.onsuccess = () => {
+        resolve();
+      };
+      updateRequest.onerror = (error: Event) => {
+        reject(error);
+      };
+    };
+  });
+}
+
+
   // Estoque CRUD
 
   // Adicionar estoque
@@ -265,6 +311,28 @@ export class IndexedDBService {
       };
     });
   }
+  // Atualizar estoque
+updateEstoque(estoque: any): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(this.dbName, this.dbVersion);
+
+    request.onsuccess = (event: any) => {
+      const db = event.target.result;
+      const transaction = db.transaction('estoques', 'readwrite');
+      const store = transaction.objectStore('estoques');
+
+      // Usar `put` para atualizar o estoque existente
+      const updateRequest = store.put(estoque);
+      updateRequest.onsuccess = () => {
+        resolve();
+      };
+      updateRequest.onerror = (error: Event) => {
+        reject(error);
+      };
+    };
+  });
+}
+
 
   // Categoria CRUD
 
@@ -337,4 +405,25 @@ export class IndexedDBService {
       };
     });
   }
+ // Atualizar categoria
+updateCategoria(categoria: any): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(this.dbName, this.dbVersion);
+
+    request.onsuccess = (event: any) => {
+      const db = event.target.result;
+      const transaction = db.transaction('categorias', 'readwrite');
+      const store = transaction.objectStore('categorias');
+
+      // Usar `put` para atualizar a categoria existente
+      const updateRequest = store.put(categoria);
+      updateRequest.onsuccess = () => {
+        resolve();
+      };
+      updateRequest.onerror = (error: Event) => {
+        reject(error);
+      };
+    };
+  });
+}
 }

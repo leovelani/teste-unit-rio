@@ -31,20 +31,32 @@ export class EstoquePage implements OnInit {
     });
   }
 
+  // Método que será chamado quando o formulário for submetido
   onSubmit() {
-    console.log('Estoque cadastrado:', this.estoque);
-  
-    // Salvar no IndexedDB
-    this.indexedDBService.addEstoque(this.estoque).then(() => {
-      // Após o salvamento, enviar o novo estoque e fechar o modal
-      this.modalCtrl.dismiss({ nome_estoque: this.estoque.nome_estoque });
-  
-      // Limpar o formulário após o salvamento
-      this.estoque = {};
-    }).catch((error) => {
-      console.error('Erro ao salvar o estoque:', error);
-    });
-  }  
+    // Verificar se estamos editando ou adicionando
+    if (this.estoque.id_estoque) {
+      // Atualizar o estoque existente
+      this.indexedDBService.updateEstoque(this.estoque).then(() => {
+        this.loadEstoques();
+        this.estoque = {}; // Limpar o formulário
+      }).catch((error) => {
+        console.error('Erro ao atualizar o estoque:', error);
+      });
+    } else {
+      // Adicionar novo estoque
+      this.indexedDBService.addEstoque(this.estoque).then(() => {
+        this.loadEstoques();
+        this.estoque = {}; // Limpar o formulário
+      }).catch((error) => {
+        console.error('Erro ao salvar o estoque:', error);
+      });
+    }
+  }
+
+  // Método para editar um estoque
+  editEstoque(estoque: any) {
+    this.estoque = { ...estoque }; // Carregar dados do estoque no formulário para edição
+  }
 
   // Método para excluir um estoque
   deleteEstoque(id_estoque: number) {

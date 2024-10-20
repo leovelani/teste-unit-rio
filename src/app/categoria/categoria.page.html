@@ -1,16 +1,12 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Cadastrar Categoria</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="close()">          
-        <ion-icon class="close-icon" slot="icon-only" name="close-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <!-- Formulário para cadastrar nova categoria -->
+  <!-- Formulário para cadastrar/editar categoria -->
   <form (ngSubmit)="onSubmit()" #categoriaForm="ngForm">
     <ion-item>
       <ion-label position="floating">Nome da Categoria</ion-label>
@@ -27,11 +23,25 @@
       </ion-select>
     </ion-item>
 
-    <ion-button expand="full" type="submit" [disabled]="!categoriaForm.form.valid">Cadastrar Categoria</ion-button>
+    <!-- Seleção de Estoque -->
+    <ion-item>
+      <ion-label position="floating">Selecionar Estoque</ion-label>
+      <ion-select [(ngModel)]="categoria.id_estoque" name="id_estoque" required>
+        <ion-select-option *ngFor="let estoque of estoques" [value]="estoque.id_estoque">
+          {{ estoque.nome_estoque }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Mudar o texto do botão dependendo se estamos editando ou criando -->
+    <ion-button expand="full" type="submit" [disabled]="!categoriaForm.form.valid">
+      {{ categoria.id_categoria ? 'Atualizar Categoria' : 'Cadastrar Categoria' }}
+    </ion-button>
   </form>
 
   <hr />
 
+  <!-- Lista de categorias cadastradas -->
   <ion-list>
     <ion-list-header>
       <ion-label>Categorias Cadastradas</ion-label>
@@ -39,10 +49,42 @@
 
     <ion-item-sliding *ngFor="let categoria of categorias">
       <ion-item>
-        <ion-label> {{ categoria.nome_categoria }}</ion-label>
-        <ion-label> Estoque - {{ getEstoqueNome(categoria.id_estoque) }}</ion-label>
+        <ion-label>{{ categoria.nome_categoria }}</ion-label>
       </ion-item>
       <ion-item-options side="end">
+        <!-- Botão de Editar -->
+        <ion-item-option color="primary" (click)="editCategoria(categoria)">
+          <ion-icon slot="icon-only" name="create"></ion-icon>
+          Editar
+        </ion-item-option>
+        <!-- Botão de Excluir -->
+        <ion-item-option color="danger" (click)="deleteCategoria(categoria.id_categoria)">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+          Excluir
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+  <hr />
+
+  <!-- Lista de categorias cadastradas -->
+  <ion-list>
+    <ion-list-header>
+      <ion-label>Categorias Cadastradas</ion-label>
+    </ion-list-header>
+
+    <ion-item-sliding *ngFor="let categoria of categorias">
+      <ion-item>
+        <ion-label>{{ categoria.nome_categoria }}</ion-label>
+      </ion-item>
+      <ion-item-options side="end">
+        <!-- Botão de Editar -->
+        <ion-item-option color="primary" (click)="editCategoria(categoria)">
+          <ion-icon slot="icon-only" name="create"></ion-icon>
+          Editar
+        </ion-item-option>
+        <!-- Botão de Excluir -->
         <ion-item-option color="danger" (click)="deleteCategoria(categoria.id_categoria)">
           <ion-icon slot="icon-only" name="trash"></ion-icon>
           Excluir
