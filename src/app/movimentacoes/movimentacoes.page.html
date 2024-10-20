@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Cadastrar Movimentação</ion-title>
+    <ion-title>Histórico de Movimentações</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="goBack()">
         <ion-icon class="close-icon" slot="icon-only" name="close-outline"></ion-icon>
@@ -10,42 +10,43 @@
 </ion-header>
 
 <ion-content>
-  <!-- Formulário para cadastrar movimentação -->
-  <form (ngSubmit)="onSubmit()" #movimentacaoForm="ngForm">
+  <!-- Filtro de data -->
+  <form (ngSubmit)="onFilter()" #filterForm="ngForm">
     <ion-item>
-      <ion-label position="floating">Produto</ion-label>
-      <ion-select [(ngModel)]="movimentacao.id_produto" name="id_produto" required>
-        <ion-select-option *ngFor="let produto of produtos" [value]="produto.id_produto">{{ produto.nome_produto }}</ion-select-option>
-      </ion-select>
+      <ion-label>Data Início</ion-label>
+      <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="filtro.dataInicio" name="dataInicio" required></ion-datetime>
     </ion-item>
 
     <ion-item>
-      <ion-label position="floating">Tipo de Movimentação</ion-label>
-      <ion-select [(ngModel)]="movimentacao.tipo_movimentacao" name="tipo_movimentacao" required>
-        <ion-select-option value="entrada">Entrada</ion-select-option>
-        <ion-select-option value="saida">Saída</ion-select-option>
-        <ion-select-option value="exclusao">Exclusão</ion-select-option>
-      </ion-select>
+      <ion-label>Data Fim</ion-label>
+      <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="filtro.dataFim" name="dataFim" required></ion-datetime>
     </ion-item>
 
-    <ion-item>
-      <ion-label position="floating">Quantidade Movimentada</ion-label>
-      <ion-input type="number" required [(ngModel)]="movimentacao.quantidade_movimentada" name="quantidade_movimentada"></ion-input>
-    </ion-item>
-
-    <ion-button expand="full" type="submit" [disabled]="!movimentacaoForm.form.valid">Cadastrar Movimentação</ion-button>
+    <ion-button expand="full" type="submit" [disabled]="!filterForm.form.valid">Filtrar</ion-button>
   </form>
 
-  <!-- Listagem de movimentações cadastradas -->
+  <!-- Listagem de movimentações filtradas -->
   <ion-list>
-    <ion-item *ngFor="let mov of movimentacoes">
+    <ion-item *ngFor="let mov of movimentacoesFiltradas">
       <ion-label>
         <h2>Produto ID: {{ mov.id_produto }}</h2>
         <p>Tipo de Movimentação: {{ mov.tipo_movimentacao }}</p>
-        <p>Quantidade Movimentada: {{ mov.quantidade_movimentada }}</p>
+        <p>Quantidade: {{ mov.quantidade_movimentada }}</p>
         <p>Data: {{ mov.data_movimentacao | date:'short' }}</p>
+        <p *ngIf="mov.tipo_movimentacao === 'entrada'">Data de Entrada: {{ mov.data_entrada | date:'short' }}</p>
+        <p *ngIf="mov.tipo_movimentacao === 'exclusao'">Data de Exclusão: {{ mov.data_exclusao | date:'short' }}</p>
       </ion-label>
-      <ion-button color="danger" (click)="deleteMovimentacao(mov.id_movimentacao)">Excluir</ion-button>
     </ion-item>
   </ion-list>
+
+  <!-- Relatório de movimentações -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Relatório de Movimentações</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Total de Entradas: {{ totalEntradas }}</p>
+      <p>Total de Exclusões: {{ totalExclusoes }}</p>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

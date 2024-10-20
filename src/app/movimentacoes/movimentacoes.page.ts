@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { IndexedDBService } from 'src/app/services/indexeddb.service';  // Certifique-se de que o caminho está correto
+import { IndexedDBService } from 'src/app/services/indexeddb.service';
 import { NavController } from '@ionic/angular';
-
 
 @Component({
   selector: 'app-movimentacoes',
@@ -10,56 +9,73 @@ import { NavController } from '@ionic/angular';
 })
 export class MovimentacoesPage implements OnInit {
 
-  movimentacao: any = {};  // Propriedade para armazenar os dados da movimentação
-  produtos: any[] = [];  // Propriedade para armazenar os produtos disponíveis
-  movimentacoes: any[] = [];  // Lista de movimentações
+  movimentacao: any = {};
+  produtos: any[] = [];
+  movimentacoes: any[] = [];
+  movimentacoesFiltradas: any[] = [];
+  filtro: any = { dataInicio: '', dataFim: '' };
+  totalEntradas: number = 0;
+  totalExclusoes: number = 0;
 
   constructor(private indexedDBService: IndexedDBService, private navCtrl: NavController) {}
 
-  goBack() {
-    this.navCtrl.navigateBack('folder/Inbox');
-  }
-
-
   ngOnInit() {
-    // Carregar os produtos do IndexedDB ao iniciar
     this.indexedDBService.getProdutos().then(produtos => {
       this.produtos = produtos;
     });
 
-    // Carregar as movimentações já cadastradas
     this.loadMovimentacoes();
   }
-
-  // Método para carregar todas as movimentações do IndexedDB
+  
+  goBack() {
+    this.navCtrl.back();
+  }
+  
   loadMovimentacoes() {
     this.indexedDBService.getMovimentacoes().then(movs => {
       this.movimentacoes = movs;
+      this.movimentacoesFiltradas = movs;
     });
   }
 
-  // Método que será chamado ao submeter o formulário
+  onFilter() {
+    const dataInicio = new Date(this.filtro.dataInicio);
+    const dataFim = new Date(this.filtro.dataFim);
+
+    this.movimentacoesFiltradas = this.movimentacoes.filter(mov => {
+      const dataMov = new Date(mov.data_movimentacao);
+      return dataMov >= dataInicio && dataMov <= dataFim;
+    });
+
+    this.calculateTotals();
+  }
+
+  calculateTotals() {
+    this.totalEntradas = this.movimentacoesFiltradas
+      .filter(mov => mov.tipo_movimentacao === 'entrada')
+      .reduce((acc, mov) => acc + mov.quantidade_movimentada, 0);
+
+    this.totalExclusoes = this.movimentacoesFiltradas
+      .filter(mov => mov.tipo_movimentacao === 'exclusao')
+      .reduce((acc, mov) => acc + mov.quantidade_movimentada, 0);
+  }
+
   onSubmit() {
-    console.log('Movimentação cadastrada:', this.movimentacao);
+    const now = new Date();
 
-    // Adicionar movimentação ao IndexedDB
+    if (this.movimentacao.tipo_movimentacao === 'entrada') {
+      this.movimentacao.data_entrada = now;
+    } else if (this.movimentacao.tipo_movimentacao === 'exclusao') {
+      this.movimentacao.data_exclusao = now;
+    }
+
+    this.movimentacao.data_movimentacao = now;
+
     this.indexedDBService.addMovimentacao(this.movimentacao).then(() => {
-      // Atualizar a lista de movimentações
       this.loadMovimentacoes();
-      // Limpar o formulário após o salvamento
       this.movimentacao = {};
-    }).catch((error) => {
+    }).catch(error => {
       console.error('Erro ao adicionar movimentação:', error);
-    });
-  }
-
-  // Método para excluir uma movimentação
-  deleteMovimentacao(id_movimentacao: number) {
-    this.indexedDBService.deleteMovimentacao(id_movimentacao).then(() => {
-      // Atualizar a lista de movimentações após a exclusão
-      this.loadMovimentacoes();
-    }).catch((error) => {
-      console.error('Erro ao excluir movimentação:', error);
     });
   }
 }
