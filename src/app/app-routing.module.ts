@@ -33,6 +33,10 @@ const routes: Routes = [
   },  {
     path: 'movimentacoes',
     loadChildren: () => import('./movimentacoes/movimentacoes.module').then( m => m.MovimentacoesPageModule)
+  },
+  {
+    path: 'lista-compras',
+    loadChildren: () => import('./lista-compras/lista-compras.module').then( m => m.ListaComprasPageModule)
   }
 
 ];

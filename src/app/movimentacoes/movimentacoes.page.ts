@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IndexedDBService } from 'src/app/services/indexeddb.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-movimentacoes',
@@ -12,7 +13,11 @@ export class MovimentacoesPage implements OnInit {
   produtos: any[] = [];  // Propriedade para armazenar os produtos disponíveis
   movimentacoes: any[] = [];  // Lista de movimentações
 
-  constructor(private indexedDBService: IndexedDBService) {}
+  constructor(private indexedDBService: IndexedDBService, private navCtrl: NavController) {}
+  
+  goBack() {
+    this.navCtrl.navigateBack('folder/Inbox');
+  }
 
   ngOnInit() {
     // Carregar os produtos do IndexedDB ao iniciar

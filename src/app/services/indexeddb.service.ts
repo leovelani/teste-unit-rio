@@ -4,6 +4,9 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class IndexedDBService {
+  getProdutosByEstoque(id_estoque: number) {
+    throw new Error('Method not implemented.');
+  }
   private dbName: string = 'EstoqueDB';
   private dbVersion: number = 2;  // Atualize a versão do banco para aplicar a nova object store
 
@@ -425,5 +428,5 @@ updateCategoria(categoria: any): Promise<void> {
       };
     };
   });
-}
+  }
 }

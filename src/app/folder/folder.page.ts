@@ -65,11 +65,20 @@ export class FolderPage implements OnInit {
       console.error('Erro ao carregar estoques:', error);
     });
   }
+
   validateAndNavigate() {
     const currentUrl = this.router.url;
 
     if (currentUrl !== '/movimentacoes') {
       this.router.navigate(['/movimentacoes']);
+    }
+  }
+
+  listagemcompras() {
+    const currentUrl = this.router.url;
+
+    if (currentUrl !== '/lista-compras') {
+      this.router.navigate(['/lista-compras']);
     }
   }
 }
