@@ -28,8 +28,22 @@
     </ion-item>
 
     <ion-item>
+      <ion-label position="floating">Data de Cadastro</ion-label>
+      <ion-input type="date" required [(ngModel)]="produto.data_cadastro" name="data_cadastro"></ion-input>
+    </ion-item>
+
+    <ion-item>
       <ion-label position="floating">Data de Validade</ion-label>
       <ion-input type="date" required [(ngModel)]="produto.data_validade" name="data_validade"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Estoque</ion-label>
+      <ion-select [(ngModel)]="produto.id_estoque" name="id_estoque" required>
+        <ion-select-option *ngFor="let estoque of estoques" [value]="estoque.id_estoque">
+          {{ estoque.nome_estoque }}
+        </ion-select-option>
+      </ion-select>
     </ion-item>
 
     <ion-item>
@@ -57,6 +71,7 @@
       <ion-label>
         <h2>{{ produto.nome_produto }} ({{ produto.codigo_barras }})</h2>
         <p>Quantidade: {{ produto.quantidade }}</p>
+        <p>Data de Cadastro: {{ produto.data_cadastro }}</p>
         <p>Data de Validade: {{ produto.data_validade }}</p>
         <p>Categoria: {{ getCategoriaNome(produto.id_categoria) }}</p>
         <p>Preço Pago: {{ produto.valor_pago }}</p>

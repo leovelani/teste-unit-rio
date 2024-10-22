@@ -8,34 +8,35 @@ import { IndexedDBService } from '../services/indexeddb.service';
   styleUrls: ['./lista-compras.page.scss'],
 })
 export class ListaComprasPage implements OnInit {
-  listaDeCompras: any[] = []; // Armazanamento
+  listaDeCompras: any[] = [];
   quantidadeMinima: number = 20;
 
-  constructor(private indexedDBService: IndexedDBService, private navCtrl: NavController) { }
+  constructor(private indexedDBService: IndexedDBService, private navCtrl: NavController) {}
 
   goBack() {
     this.navCtrl.navigateBack('folder/Inbox');
   }
 
-
   ngOnInit() {
-    this.gerarListaDeCompras();  // Gera a lista ao carregar a página
+    this.gerarListaDeCompras();
   }
-
-  // Método para gerar a lista de compras
   gerarListaDeCompras() {
-    this.indexedDBService.getProdutos().then((produtos) => {
-      // Filtra os produtos que estão abaixo de 20 e cria a lista de compras
-      this.listaDeCompras = produtos.filter(produto => produto.quantidade < this.quantidadeMinima).map(produto => ({
-        nome_estoque: produto.nome_estoque,
-        categoria: produto.categoria,
-        nome_produto: produto.nome_produto,
-        qtd_minima: this.quantidadeMinima,  // Define o mínimo como 20
-        qtd_falta: (this.quantidadeMinima - produto.quantidade).toFixed(2)  // Calcula o que falta para atingir 20
-      }));
+    Promise.all([
+      this.indexedDBService.getProdutos(),
+      this.indexedDBService.getEstoques()
+    ]).then(([produtos, estoques]) => {
+      this.listaDeCompras = produtos.filter(produto => produto.quantidade < this.quantidadeMinima).map(produto => {
+        const estoque = estoques.find(e => e.id_estoque === produto.id_estoque);
+        return {
+          nome_estoque: estoque ? estoque.nome_estoque : 'Estoque Desconhecido',
+          nome_produto: produto.nome_produto,
+          qtd_atual: produto.quantidade,
+          qtd_minima: this.quantidadeMinima,
+          qtd_falta: (this.quantidadeMinima - produto.quantidade)
+        };
+      });
     }).catch((error) => {
       console.error('Erro ao gerar a lista de compras:', error);
     });
-  }
-
+  }  
 }

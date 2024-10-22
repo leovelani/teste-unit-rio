@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IndexedDBService } from '../services/indexeddb.service';  // Importe o serviço
+import { IndexedDBService } from '../services/indexeddb.service';
 import { ModalController } from '@ionic/angular';
 
 @Component({
@@ -9,70 +9,79 @@ import { ModalController } from '@ionic/angular';
 })
 export class ProdutoPage implements OnInit {
 
-  produto: any = {};  // Propriedade para armazenar os dados do produto
-  produtos: any[] = [];  // Lista para armazenar todos os produtos
-  categorias: any[] = [];  // Simulação de categorias disponíveis
+  produto: any = {};
+  produtos: any[] = [];
+  categorias: any[] = [];
+  estoques: any[] = []; 
 
-  constructor(private indexedDBService: IndexedDBService, private modalCtrl: ModalController) {}  // Injete o serviço no construtor
+  constructor(private indexedDBService: IndexedDBService, private modalCtrl: ModalController) {}
 
   close() {
     this.modalCtrl.dismiss();
   }
 
   ngOnInit() {
-    // Carregar categorias do IndexedDB
     this.loadCategorias();
-
-    // Carregar todos os produtos do IndexedDB
     this.loadProdutos();
+    this.loadEstoques(); 
   }
 
-  // Método para carregar as categorias do IndexedDB
+  // Carregar categorias
   loadCategorias() {
     this.indexedDBService.getCategorias().then((data) => {
       this.categorias = data;
     });
   }
 
-  // Método para carregar os produtos do IndexedDB
+  // Carregar estoques
+  loadEstoques() {
+    this.indexedDBService.getEstoques().then((data) => {
+      this.estoques = data;
+    });
+  }
+
+  // Carregar produtos
   loadProdutos() {
     this.indexedDBService.getProdutos().then((data) => {
       this.produtos = data;
     });
   }
 
-  // Método que será chamado ao submeter o formulário
   onSubmit() {
-    // Verificar se estamos editando ou adicionando
+    // Certifique-se de que o id_estoque está sendo corretamente associado ao produto
+    if (this.produto.id_estoque) {
+      this.produto.id_estoque = this.produto.id_estoque;  // Associa o id_estoque selecionado
+    }
+
     if (this.produto.id_produto) {
       // Atualizar produto existente
       this.indexedDBService.updateProduto(this.produto).then(() => {
         this.loadProdutos();
-        this.produto = {}; // Limpar o formulário após atualização
+        this.produto = {};
       }).catch((error) => {
         console.error('Erro ao atualizar produto:', error);
       });
     } else {
       // Adicionar novo produto
       this.indexedDBService.addProduto(this.produto).then(() => {
-        // Após salvar o produto, recarregar a lista de produtos
         this.loadProdutos();
-        this.produto = {}; // Limpar o formulário após o salvamento
+        this.produto = {};
       }).catch((error) => {
         console.error('Erro ao adicionar produto:', error);
       });
     }
   }
 
-  // Método para editar um produto
+  // Editar produto
   editProduto(produto: any) {
-    this.produto = { ...produto }; // Carregar dados do produto para edição
+    this.produto = { ...produto };
+    // Recupera o estoque selecionado para o produto
+    this.produto.id_estoque = produto.id_estoque;
   }
-  
-  // Método para excluir um produto
+
+  // Excluir produto
   excluirProduto(id_produto: number) {
     this.indexedDBService.deleteProduto(id_produto).then(() => {
-      // Após a exclusão, recarregar a lista de produtos
       this.loadProdutos();
     });
   }

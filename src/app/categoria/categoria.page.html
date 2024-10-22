@@ -45,6 +45,7 @@
     <ion-item-sliding *ngFor="let categoria of categorias">
       <ion-item>
         <ion-label>{{ categoria.nome_categoria }}</ion-label>
+        <ion-label> Estoque - {{ getEstoqueNome(categoria.id_estoque) }}</ion-label>
       </ion-item>
       <ion-item-options side="end">
         <!-- Botão de Editar -->
