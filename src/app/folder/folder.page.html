@@ -1,7 +1,8 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-select placeholder="Selecione o Estoque" [(ngModel)]="selectedEstoque">
+      <!-- Captura a mudança no select de estoques e chama a função para exibir os produtos -->
+      <ion-select placeholder="Selecione o Estoque" [(ngModel)]="selectedEstoque" (ngModelChange)="exibirProdutosPorEstoque($event)">
         <ion-select-option *ngFor="let estoque of estoques" [value]="estoque.id_estoque">
           {{ estoque.nome_estoque }}
         </ion-select-option>
@@ -25,6 +26,16 @@
       <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
     </ion-button>
   </div>
+
+  <ion-list>
+    <ion-item *ngFor="let produto of produtos">
+      <ion-label>
+        <h2>{{ produto.nome_produto }}</h2>
+        <p>Categoria: {{ getCategoriaNome(produto.id_categoria) }}</p>
+        <p>Quantidade: {{ produto.quantidade }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>  
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end"> 
     <ion-fab-button>
