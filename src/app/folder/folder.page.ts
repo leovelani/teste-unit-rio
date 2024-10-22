@@ -2,23 +2,23 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { IndexedDBService } from '../services/indexeddb.service'; 
-import { EstoquePage } from '../estoque/estoque.page';  
-import { CategoriaPage } from '../categoria/categoria.page';  
-import { ProdutoPage } from '../produto/produto.page';  
+import { IndexedDBService } from '../services/indexeddb.service';
+import { EstoquePage } from '../estoque/estoque.page';
+import { CategoriaPage } from '../categoria/categoria.page';
+import { ProdutoPage } from '../produto/produto.page';
 
 @Component({
   selector: 'app-folder',
   templateUrl: './folder.page.html',
   styleUrls: ['./folder.page.scss'],
 })
-
 export class FolderPage implements OnInit {
   public folder!: string;
   public estoques: any[] = [];
   public selectedEstoque!: string;
-  public produtos: any[] = []; 
-  public categorias: any[] = []; 
+  public produtos: any[] = [];
+  public categorias: any[] = [];
+  public produtosFiltrados: any[] = [];
 
   private activatedRoute = inject(ActivatedRoute);
 
@@ -30,11 +30,10 @@ export class FolderPage implements OnInit {
 
   ngOnInit() {
     this.folder = this.activatedRoute.snapshot.paramMap.get('id') as string;
-    this.loadEstoques(); 
+    this.loadEstoques();
     this.loadCategorias();
   }
 
-  // Carregar estoques disponíveis
   loadEstoques() {
     this.indexedDBService.getEstoques().then((estoques) => {
       this.estoques = estoques;
@@ -43,7 +42,6 @@ export class FolderPage implements OnInit {
     });
   }
 
-  // Método para carregar categorias
   loadCategorias() {
     this.indexedDBService.getCategorias().then((categorias) => {
       this.categorias = categorias;
@@ -52,38 +50,62 @@ export class FolderPage implements OnInit {
     });
   }
 
-  // Exibir produtos automaticamente ao selecionar o estoque
   exibirProdutosPorEstoque(idEstoque: string) {
     if (idEstoque) {
       this.indexedDBService.getProdutos().then((produtos) => {
-        // Filtrar os produtos que pertencem ao estoque selecionado
         this.produtos = produtos.filter(produto => produto.id_estoque === idEstoque);
+        this.produtosFiltrados = [...this.produtos];
       }).catch((error) => {
         console.error('Erro ao carregar produtos:', error);
       });
     }
   }
 
-  // Outros métodos, como abrir modais, navegação, etc.
+  editProduto(produto: any) {
+    this.router.navigate(['/produto/editar', produto.id_produto]); // Navega para a página de edição com parâmetros
+  }
+
+  excluirProduto(id_produto: number) {
+    this.indexedDBService.deleteProduto(id_produto).then(() => {
+      console.log('Produto excluído com sucesso');
+      this.exibirProdutosPorEstoque(this.selectedEstoque); // Recarrega os produtos após exclusão
+    }).catch((error) => {
+      console.error('Erro ao excluir produto:', error);
+    });
+  }
+
+  filterVencidos() {
+    const hoje = new Date();
+    this.produtosFiltrados = this.produtos.filter(produto => {
+      const validade = new Date(produto.data_validade);
+      return validade < hoje;
+    });
+  }
+
+  filterProximosVencer() {
+    const hoje = new Date();
+    const proximoMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, hoje.getDate());
+    this.produtosFiltrados = this.produtos.filter(produto => {
+      const validade = new Date(produto.data_validade);
+      return validade >= hoje && validade <= proximoMes;
+    });
+  }
+
   async openEstoqueModal() {
     const modal = await this.modalCtrl.create({
       component: EstoquePage,
     });
-  
     await modal.present();
-  
     const { data } = await modal.onDidDismiss();
     if (data && data.nome_estoque) {
-      this.loadEstoques(); 
+      this.loadEstoques();
     }
   }
 
   async openCategoriaModal() {
     const modal = await this.modalCtrl.create({
       component: CategoriaPage,
-      componentProps: {
-        estoques: this.estoques 
-      },
+      componentProps: { estoques: this.estoques },
     });
     return await modal.present();
   }
@@ -97,7 +119,6 @@ export class FolderPage implements OnInit {
 
   validateAndNavigate() {
     const currentUrl = this.router.url;
-
     if (currentUrl !== '/movimentacoes') {
       this.router.navigate(['/movimentacoes']);
     }
@@ -105,7 +126,6 @@ export class FolderPage implements OnInit {
 
   listagemcompras() {
     const currentUrl = this.router.url;
-
     if (currentUrl !== '/lista-compras') {
       this.router.navigate(['/lista-compras']);
     }
@@ -115,5 +135,4 @@ export class FolderPage implements OnInit {
     const categoria = this.categorias.find(cat => cat.id_categoria === id_categoria);
     return categoria ? categoria.nome_categoria : 'Categoria não encontrada';
   }
-  
 }

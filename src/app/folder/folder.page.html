@@ -9,7 +9,7 @@
       </ion-select>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="listagemcompras()"> 
+      <ion-button (click)="listagemcompras()">
         <ion-icon slot="icon-only" name="cart-outline"></ion-icon>
       </ion-button>
       <ion-button (click)="validateAndNavigate()">
@@ -22,22 +22,34 @@
 <ion-content [fullscreen]="true">
   <div class="search-container">
     <ion-searchbar placeholder="Pesquisar"></ion-searchbar>
-    <ion-button fill="clear">
-      <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+    <ion-button fill="clear" (click)="filterVencidos()">
+      <ion-icon slot="icon-only" name="alert-outline"></ion-icon>
+      <ion-label>Vencidos</ion-label>
+    </ion-button>
+    <ion-button fill="clear" (click)="filterProximosVencer()">
+      <ion-icon slot="icon-only" name="hourglass-outline"></ion-icon>
+      <ion-label>A vencer</ion-label>
     </ion-button>
   </div>
 
   <ion-list>
-    <ion-item *ngFor="let produto of produtos">
+    <ion-item *ngFor="let produto of produtosFiltrados">
       <ion-label>
         <h2>{{ produto.nome_produto }}</h2>
         <p>Categoria: {{ getCategoriaNome(produto.id_categoria) }}</p>
         <p>Quantidade: {{ produto.quantidade }}</p>
+        <p>Data de Validade: {{ produto.data_validade | date: 'shortDate' }}</p>
       </ion-label>
+      <ion-button color="primary" (click)="editProduto(produto)">
+        <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+      </ion-button>
+      <ion-button color="danger" (click)="excluirProduto(produto.id_produto)">
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      </ion-button>
     </ion-item>
-  </ion-list>  
+  </ion-list>
 
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end"> 
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button>
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
