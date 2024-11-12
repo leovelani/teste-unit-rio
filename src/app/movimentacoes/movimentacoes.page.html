@@ -44,7 +44,7 @@
   <ion-list>
     <ion-item *ngFor="let mov of movimentacoes">
       <ion-label>
-        <h2>Produto ID: {{ mov.id_produto }}</h2>
+        <h2>Produto: {{ getProdutoNome(mov.id_produto) }}</h2>
         <p>Tipo de Movimentação: {{ mov.tipo_movimentacao }}</p>
         <p>Quantidade Movimentada: {{ mov.quantidade_movimentada }}</p>
         <p>Data: {{ mov.data_movimentacao | date:'short' }}</p>

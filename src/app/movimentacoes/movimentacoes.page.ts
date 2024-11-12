@@ -74,4 +74,10 @@ export class MovimentacoesPage implements OnInit {
       console.error('Erro ao excluir movimentação:', error);
     });
   }
+
+  getProdutoNome(id_produto: number): string {
+    const produto = this.produtos.find(prod => prod.id_produto === id_produto);
+    return produto ? produto.nome_produto : 'Produto não encontrado';
+  }
+  
 }

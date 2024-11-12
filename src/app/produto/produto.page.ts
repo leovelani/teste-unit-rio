@@ -64,10 +64,24 @@ export class ProdutoPage implements OnInit {
     } else {
       // Adicionar novo produto
       this.indexedDBService.addProduto(this.produto).then(() => {
+        // Carregar produtos após adicionar
         this.loadProdutos();
+
+        // Limpar formulário após o salvamento
         this.produto = {};
+
+        // Registrar movimentação de compra
+        const movimentacao = {
+          tipo: 'entrada',
+          id_produto: this.produto.id_produto,  // Assumindo que o ID do produto já tenha sido gerado
+          quantidade: this.produto.quantidade,
+          data: new Date().toISOString(),
+        };
+        return this.indexedDBService.addMovimentacao(movimentacao);
+      }).then(() => {
+        console.log('Movimentação de compra registrada.');
       }).catch((error) => {
-        console.error('Erro ao adicionar produto:', error);
+        console.error('Erro ao adicionar produto ou registrar movimentação:', error);
       });
     }
   }

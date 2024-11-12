@@ -150,54 +150,55 @@ updateProduto(produto: any): Promise<void> {
 
   // Movimentações CRUD
 
-  // Adicionar movimentação
-  addMovimentacao(movimentacao: any): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName, this.dbVersion);
+ // Movimentações CRUD
+ addMovimentacao(movimentacao: any): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(this.dbName, this.dbVersion);
+    request.onsuccess = (event: any) => {
+      const db = event.target.result;
+      const transaction = db.transaction('movimentacoes', 'readwrite');
+      const store = transaction.objectStore('movimentacoes');
 
-      request.onsuccess = (event: any) => {
-        const db = event.target.result;
-        const transaction = db.transaction('movimentacoes', 'readwrite');
-        const store = transaction.objectStore('movimentacoes');
-
-        const addRequest = store.add(movimentacao);
-        addRequest.onsuccess = () => {
-          resolve();
-        };
-        addRequest.onerror = (error: Event) => {
-          reject(error);
-        };
+      const addRequest = store.add(movimentacao);
+      addRequest.onsuccess = () => {
+        resolve();
       };
-    });
-  }
-
-  // Listar movimentações
-  getMovimentacoes(): Promise<any[]> {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName, this.dbVersion);
-
-      request.onsuccess = (event: any) => {
-        const db = event.target.result;
-        const transaction = db.transaction('movimentacoes', 'readonly');
-        const store = transaction.objectStore('movimentacoes');
-        const movimentacoes: any[] = [];
-
-        store.openCursor().onsuccess = (e: any) => {
-          const cursor = e.target.result;
-          if (cursor) {
-            movimentacoes.push(cursor.value);
-            cursor.continue();
-          } else {
-            resolve(movimentacoes);
-          }
-        };
-
-        store.openCursor().onerror = (error: Event) => {
-          reject(error);
-        };
+      addRequest.onerror = (error: Event) => {
+        reject(error);
       };
-    });
-  }
+    };
+  });
+}
+
+getMovimentacoes(): Promise<any[]> {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(this.dbName, this.dbVersion);
+    request.onsuccess = (event: any) => {
+      const db = event.target.result;
+      const transaction = db.transaction('movimentacoes', 'readonly');
+      const store = transaction.objectStore('movimentacoes');
+      const movimentacoes: any[] = [];
+
+      store.openCursor().onsuccess = (e: any) => {
+        const cursor = e.target.result;
+        if (cursor) {
+          movimentacoes.push(cursor.value);
+          cursor.continue();
+        } else {
+          resolve(movimentacoes);
+        }
+      };
+
+      store.openCursor().onerror = (error: Event) => {
+        reject(error);
+      };
+    };
+  });
+
+
+// Outros métodos de CRUD (para categorias, estoques e produtos) permanecem iguais
+
+}
 
   // Excluir movimentação
   deleteMovimentacao(id_movimentacao: number): Promise<void> {
